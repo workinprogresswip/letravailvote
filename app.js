@@ -57,7 +57,7 @@ function summary(cat,f){
 function matrix(cat){
   const ls=LOIS.filter(l=>l.categorie===cat);
   const fs=FAMS.filter(f=>ls.some(l=>famPos(l,f.id)!=="none"));
-  return `<div class="scroll"><table class="mx"><thead><tr><th></th>${ls.map(l=>`<th class="law"><a href="#loi/${l.id}"><span class="yr">${l.annee}${l.mode==="493"?" · 49.3":""}</span><span class="lt">${esc(l.titre)}</span><span class="res">${l.mode==="493"?"pas de vote":`${l.reference.sort==="adopté"?"adopté":"rejeté"} ${l.reference.pour}-${l.reference.contre}`}</span></a></th>`).join('')}${cat==="Retraites"?"":`<th class="law"><span class="yr">Tendance</span><span class="lt">sur les lois votées</span></th>`}</tr></thead>
+  return `<div class="scroll"><table class="mx"><thead><tr><th></th>${ls.map(l=>`<th class="law"><a href="/loi/${l.id}"><span class="yr">${l.annee}${l.mode==="493"?" · 49.3":""}</span><span class="lt">${esc(l.titre)}</span><span class="res">${l.mode==="493"?"pas de vote":`${l.reference.sort==="adopté"?"adopté":"rejeté"} ${l.reference.pour}-${l.reference.contre}`}</span></a></th>`).join('')}${cat==="Retraites"?"":`<th class="law"><span class="yr">Tendance</span><span class="lt">sur les lois votées</span></th>`}</tr></thead>
 <tbody>${fs.map(f=>`<tr><th scope="row">${esc(COURT[f.id])}</th>${ls.map(l=>`<td data-tip="${tipAttr(l,f.id)}">${cellBig(l,f.id)}</td>`).join('')}${cat==="Retraites"?"":(summary(cat,f.id)||'<td class="sum"><span class="num">aucune loi votée</span></td>')}</tr>`).join('')}</tbody></table></div>`;
 }
 const CATDESC={"Retraites":"Attention au sens des textes : certains réforment le système, d'autres reviennent sur la réforme de 2023. Voter « pour » n'a donc pas le même sens d'une colonne à l'autre, c'est pourquoi aucune tendance globale n'est calculée ici.","Chômage et emploi":"Règles de l'assurance chômage, accompagnement des demandeurs d'emploi, emploi des chômeurs de longue durée.","Droit du travail et dialogue social":"Code du travail, négociation dans l'entreprise, représentants du personnel.","Salaires et partage de la valeur":"Primes, intéressement, participation.","Conditions de travail et santé":"Santé au travail, congés, statut des travailleurs des plateformes.","Formation":"Formation professionnelle et apprentissage."};
@@ -98,7 +98,7 @@ ${grpRows(s,moc)}</div>`;
 function vueLoi(id){
   const l=BYID[id];if(!l)return `<p>Loi introuvable.</p>`;const p=PET[id];const T=TEXTES[id]||(p?{bref:'',contenu:p.contenu}:{});
   const r=l.reference;
-  return `<a class="back" href="#sujets">← Tous les sujets</a>
+  return `<a class="back" href="/sujets">← Tous les sujets</a>
 <div class="law-head"><div><span class="tag">${esc(l.categorie)}</span> <span class="tag">${l.annee}</span>${l.mode==="493"?' <span class="tag">Adoptée par 49.3</span>':''}</div><h2>${esc(l.titre)}</h2><div class="bref">${esc(T.bref||'')}</div></div>
 <div class="grid2"><div class="panel"><h3>Ce que contient le texte</h3>${POURVOUS[id]?`<div class="pourvous"><span class="k">Ce que ça change pour vous</span><p>${esc(POURVOUS[id])}</p></div>`:''}${T.note493?`<div class="note493"><b>Pas de vote sur le texte.</b> ${esc(T.note493)}</div>`:''}<p>${esc(T.contenu||'')}</p>
 ${p?`<p class="src">${esc(p.statut)} · <a href="${esc(p.source)}" target="_blank" rel="noopener">source</a> · Vérifié le ${esc(VERIF)}</p>`:''}<p class="src">Texte de présentation rédigé pour ce site, à relire avant publication.</p></div>
@@ -130,9 +130,9 @@ ${z.censure?`<div class="tile z"><div class="k">Censures votées</div><div class
 ${DATA.categories.map(c=>{const ls=LOIS.filter(l=>l.categorie===c&&l.mode!=="493");const tc=tally(ls,f);if(!(tc.pour+tc.contre+tc.abstention))return '';
  return `<div class="ov-row"><div class="nm">${esc(c)}</div><div>${stackBar(tc)}</div><div class="lg">${legende_txt(tc)}</div></div>`}).join('')}</section>
 <section class="overview"><div class="cat-head"><h2 style="font-size:21px">Au fil des dix ans</h2><p>Chaque texte dans l'ordre chronologique. Cliquez pour ouvrir la fiche.</p></div>
-<div class="scroll"><div class="strip">${chrono.map(l=>`<a class="sitem" href="#loi/${l.id}" data-tip="${tipAttr(l,f)}"><span class="y">${l.annee}</span>${cellBig(l,f)}<span class="t">${esc(l.titre)}</span></a>`).join('')}</div></div>
+<div class="scroll"><div class="strip">${chrono.map(l=>`<a class="sitem" href="/loi/${l.id}" data-tip="${tipAttr(l,f)}"><span class="y">${l.annee}</span>${cellBig(l,f)}<span class="t">${esc(l.titre)}</span></a>`).join('')}</div></div>
 ${legend()}</section>
-<div class="panel">${DATA.categories.map(c=>{const ls=LOIS.filter(l=>l.categorie===c&&famPos(l,f)!=="none");if(!ls.length)return '';return `<h3 style="font-size:18px;margin-top:16px">${esc(c)}</h3><div class="flist">${ls.map(l=>`<a class="frow" href="#loi/${l.id}" data-tip="${tipAttr(l,f)}">${cell(famPos(l,f),1)}<span><span class="ft">${esc(l.titre)}</span> <span class="src">· ${LAB[famPos(l,f)]}</span></span><span class="fy">${l.annee}</span></a>`).join('')}</div>`}).join('')}</div>`;
+<div class="panel">${DATA.categories.map(c=>{const ls=LOIS.filter(l=>l.categorie===c&&famPos(l,f)!=="none");if(!ls.length)return '';return `<h3 style="font-size:18px;margin-top:16px">${esc(c)}</h3><div class="flist">${ls.map(l=>`<a class="frow" href="/loi/${l.id}" data-tip="${tipAttr(l,f)}">${cell(famPos(l,f),1)}<span><span class="ft">${esc(l.titre)}</span> <span class="src">· ${LAB[famPos(l,f)]}</span></span><span class="fy">${l.annee}</span></a>`).join('')}</div>`}).join('')}</div>`;
 }
 let cmpA="Macronistes",cmpB="RN";
 function vueComparer(){
@@ -141,12 +141,12 @@ function vueComparer(){
   const opt=v=>FAMS.map(f=>`<option value="${esc(f.id)}"${f.id===v?' selected':''}>${esc(COURT[f.id])}</option>`).join('');
   return `<div class="sel"><label for="ca">Comparer</label><select id="ca">${opt(cmpA)}</select><label for="cb">avec</label><select id="cb">${opt(cmpB)}</select></div>
 <div class="panel">${n?`<div style="display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;margin-bottom:14px"><div class="big num">${Math.round(acc/n*100)} %</div><p style="margin:0;max-width:44ch">${esc(COURT[cmpA])} et ${esc(COURT[cmpB])} ont eu la même position sur <b>${acc} des ${n}</b> lois où les deux groupes ont voté.</p></div>
-<div class="flist">${rows.map(r=>`<a class="frow" href="#loi/${r.l.id}" style="grid-template-columns:auto auto minmax(0,1fr) auto">${cell(r.a,1)}${cell(r.b,1)}<span><span class="ft">${esc(r.l.titre)}</span> <span class="src">· ${r.same?'même position':'positions différentes'}</span></span><span class="fy">${r.l.annee}</span></a>`).join('')}</div>
+<div class="flist">${rows.map(r=>`<a class="frow" href="/loi/${r.l.id}" style="grid-template-columns:auto auto minmax(0,1fr) auto">${cell(r.a,1)}${cell(r.b,1)}<span><span class="ft">${esc(r.l.titre)}</span> <span class="src">· ${r.same?'même position':'positions différentes'}</span></span><span class="fy">${r.l.annee}</span></a>`).join('')}</div>
 <p class="src" style="margin-top:12px">Colonne de gauche : ${esc(COURT[cmpA])}. Colonne de droite : ${esc(COURT[cmpB])}. Les textes adoptés par 49.3 ne sont pas comptés.</p>`:`<p>Ces deux groupes n'ont jamais voté sur les mêmes lois de cette sélection.</p>`}</div>`;
 }
 function vueMethode(){return `<div class="panel method"><h3 style="margin-top:0">D'où viennent les chiffres</h3>
 <p>Tous les votes proviennent des données ouvertes de l'Assemblée nationale (archives des scrutins publics des 14e, 15e, 16e et 17e législatures). Chaque vote affiché renvoie à sa page officielle. Un échantillon de 10 scrutins a été vérifié groupe par groupe contre ces pages : les chiffres sont identiques.</p>
-<h3>Quels votes</h3><p>${LOIS.length} textes sur le travail, les retraites et l'assurance chômage, de 2016 à 2026. Pour chaque texte, un vote de référence (le vote final quand il existe) et quelques votes d'amendements qui ont marqué le débat. Seuls les scrutins publics sont connus groupe par groupe : les votes à main levée ne laissent pas de trace.</p>
+<h3>Quels votes</h3><p>${LOIS.filter(l=>l.mode!=="493").length} lois sur le travail, les retraites et l'assurance chômage, votées de 2016 à 2026, plus ${LOIS.filter(l=>l.mode==="493").length} textes adoptés par 49.3 sans vote. Pour chaque texte, un vote de référence (le vote final quand il existe) et quelques votes d'amendements qui ont marqué le débat. Seuls les scrutins publics sont connus groupe par groupe : les votes à main levée ne laissent pas de trace.</p>
 <h3>La position d'un groupe</h3><p>C'est la position qui recueille le plus de voix parmi les députés du groupe qui ont voté : pour, contre ou abstention. Si aucun député du groupe n'a voté, le groupe « n'a pas pris part au vote ». Les « votants » sont les députés qui ont voté pour, contre ou se sont abstenus : ce n'est pas le nombre de présents.</p>
 <h3>Le 49.3</h3><p>Quand le gouvernement engage sa responsabilité (article 49.3 de la Constitution), le texte est adopté sans vote, sauf si une motion de censure est votée. Pour ces textes, on montre qui a voté la censure. Ne pas voter la censure ne veut pas dire soutenir le texte.</p>
 <h3>Les familles politiques</h3><p>Les groupes changent de nom d'une législature à l'autre. On les regroupe en familles (par exemple LREM, puis Renaissance, puis Ensemble pour la République), en s'appuyant sur le parcours des députés d'un groupe à l'autre. Le nom officiel du groupe au moment du vote reste affiché sur chaque page. Les députés non inscrits ne sont pas montrés dans les tableaux.</p>
@@ -176,7 +176,7 @@ ${ORDRE_ST.map(k=>{const ms=parSt[k];if(!ms.length)return '';const [lab,cls,desc
  <div class="note">${esc(m.note)}</div>
  <div class="meta"><span>${esc(m.vehicule)}</span><span>Vérifié le ${esc(VERIF)}</span>${s?`<span class="num">${s.sort==="adopté"?"Adopté":"Rejeté"} ${s.pour}-${s.contre}</span>`:''}
  ${s?`<span class="dots">${FAMS.filter(f=>s.f[f.id]).map(f=>`<span data-tip="${esc(`<b>${COURT[f.id]}</b><br>${LAB[s.f[f.id][4]]}<br>${s.f[f.id][0]} pour · ${s.f[f.id][1]} contre · ${s.f[f.id][2]} abst.`)}">${cell(s.f[f.id][4],1)}</span>`).join('')}</span>`:''}
- ${loi?`<a href="#loi/${loi.id}">voir la loi</a>`:''}${s?` · <a href="${s.lien}" target="_blank" rel="noopener">le scrutin</a>`:''} · <a href="${esc(m.source)}" target="_blank" rel="noopener">source</a></div></article>`}).join('')}</div>`}).join('')}
+ ${loi?`<a href="/loi/${loi.id}">voir la loi</a>`:''}${s?` · <a href="${s.lien}" target="_blank" rel="noopener">le scrutin</a>`:''} · <a href="${esc(m.source)}" target="_blank" rel="noopener">source</a></div></article>`}).join('')}</div>`}).join('')}
 <p class="src" style="margin-top:18px">Chaque mesure a été vérifiée dans une source publique, citée ligne par ligne. Quand une mesure vient d'un accord entre syndicats et patronat, d'une ordonnance ou d'un décret, c'est écrit.</p>`;
 }
 
@@ -191,15 +191,41 @@ function vueMentions(){return `<div class="panel method"><h3 style="margin-top:0
 <h3>Ce que ce site n'est pas</h3>
 <p>Ce site ne dit pas si un vote est bon ou mauvais. Il ne note pas les groupes, ne classe pas les députés, et ne recommande rien. Il montre des votes, leur contexte, et renvoie à la source officielle de chacun.</p>
 <p class="src">Dernière mise à jour des données et des textes : ${esc(VERIF)}.</p></div>`}
+// ---------- adresses
+const slug=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+const FAMSLUG=Object.fromEntries(FAMS.map(f=>[slug(COURT[f.id]),f.id]));const CATSLUG=Object.fromEntries(DATA.categories.map(c=>[slug(c),c]));
+const catUrl=c=>c==="Toutes"?'/sujets':`/sujets/${slug(c)}`;const famUrl=f=>`/groupes/${slug(COURT[f])}`;const cmpUrl=(a,b)=>`/comparer/${slug(COURT[a])}/${slug(COURT[b])}`;
+// même titre que les pages générées par generer_pages.py
+function titre(v,arg){
+  if(v==="loi"&&BYID[arg])return `${BYID[arg].titre}, ${BYID[arg].annee} : qui a voté quoi`;
+  if(v==="sujets")return catSel==="Toutes"?"Les votes par sujet":`${catSel} : qui a voté quoi`;
+  if(v==="groupes")return arg?`Comment ${COURT[famSel]} a voté sur le travail`:"Les votes par groupe politique";
+  if(v==="comparer")return arg?`${COURT[cmpA]} et ${COURT[cmpB]} : leurs votes comparés`:"Comparer deux groupes";
+  return {methode:"Méthode",mentions:"Mentions légales"}[v]||"";
+}
 // ---------- routeur
 function render(){
-  const h=location.hash.slice(1)||"mesures";const [v,arg]=h.split('/');
+  const p=location.pathname.split('/').filter(Boolean);const v=p[0]||"mesures",arg=p[1];
+  if(v==="sujets")catSel=CATSLUG[arg]||"Toutes";
+  if(v==="groupes"&&FAMSLUG[arg])famSel=FAMSLUG[arg];
+  if(v==="comparer"){if(FAMSLUG[arg])cmpA=FAMSLUG[arg];if(FAMSLUG[p[2]])cmpB=FAMSLUG[p[2]];}
   const map={sujets:vueSujets,mesures:vueMesures,groupes:vueGroupes,comparer:vueComparer,methode:vueMethode,mentions:vueMentions};
-  $('#view').innerHTML=`<div class="view">${v==="loi"?vueLoi(arg):(map[v]||vueMesures)()}</div>`;
-  document.querySelectorAll('nav.tabs a').forEach(a=>a.setAttribute('aria-current',a.getAttribute('href')==='#'+(v==="loi"?"sujets":v)?'page':'false'));
+  $('#view').innerHTML=`<div class="view">${v==="loi"?vueLoi(arg):map[v]?map[v]():`<p>Cette page n'existe pas. <a href="/">Revenir à l'accueil</a></p>`}</div>`;
+  const cur=v==="mesures"?"/":"/"+(v==="loi"?"sujets":v);
+  document.querySelectorAll('nav.tabs a').forEach(a=>a.setAttribute('aria-current',a.getAttribute('href')===cur?'page':'false'));
+  const t=titre(v,arg);document.title=t?`${t} · Le Travail Voté`:"Le Travail Voté";
   tip.hidden=true;
 }
-addEventListener('hashchange',()=>{render();scrollTo({top:0})});
-document.addEventListener('click',e=>{const c=e.target.closest('[data-cat]');if(c){catSel=c.dataset.cat;render();return}const g=e.target.closest('[data-fam]');if(g){famSel=g.dataset.fam;render();scrollTo({top:0})}});
-document.addEventListener('change',e=>{if(e.target.id==='fam'){famSel=e.target.value;render()}if(e.target.id==='ca'){cmpA=e.target.value;render()}if(e.target.id==='cb'){cmpB=e.target.value;render()}});
-render();
+function go(url,haut){if(url!==location.pathname)history.pushState(null,'',url);render();if(haut)scrollTo({top:0})}
+// anciennes adresses en #, encore présentes dans des liens partagés
+function depuisHash(){const h=location.hash.slice(1);if(/^(mesures|sujets|groupes|comparer|methode|mentions|loi\/[\w-]+)$/.test(h)){history.replaceState(null,'',h==="mesures"?'/':'/'+h);return true}}
+addEventListener('popstate',()=>{render();scrollTo({top:0})});
+addEventListener('hashchange',()=>{if(depuisHash()){render();scrollTo({top:0})}});
+document.addEventListener('click',e=>{
+  const a=e.target.closest('a[href^="/"]');
+  if(a&&!a.target&&e.button===0&&!e.metaKey&&!e.ctrlKey&&!e.shiftKey&&!e.altKey){e.preventDefault();go(a.getAttribute('href'),true);return}
+  const c=e.target.closest('[data-cat]');if(c){go(catUrl(c.dataset.cat));return}
+  const g=e.target.closest('[data-fam]');if(g){go(famUrl(g.dataset.fam),true)}});
+document.addEventListener('change',e=>{if(e.target.id==='ca')go(cmpUrl(e.target.value,cmpB));if(e.target.id==='cb')go(cmpUrl(cmpA,e.target.value))});
+$('#maj').textContent=VERIF||$('#maj').textContent;
+depuisHash();render();

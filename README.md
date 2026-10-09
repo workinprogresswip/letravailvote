@@ -16,6 +16,8 @@ Site statique qui montre comment chaque groupe de l'Assemblée nationale a voté
 | `data.js` | les données de votes, générées, à ne pas modifier à la main |
 | `textes.js` | les textes de présentation des lois, écrits à la main |
 | `vercel.json` | configuration d'hébergement |
+| `generer_pages.py` | crée une page par adresse (loi, sujet, groupe, duel) avec son titre et son aperçu de partage, plus `sitemap.xml` et `robots.txt` |
+| `loi/`, `sujets/`, `groupes/`, `comparer/`, `*.html` | pages générées, à ne pas modifier à la main |
 
 ## Déployer sur Vercel
 
@@ -34,6 +36,14 @@ Les scripts sont dans le dossier `scripts/` du projet (hors dépôt) :
 - `export_site.py` assemble le tout et produit `site_data.json`, qui devient `data.js`
 
 Pour mettre à jour après de nouveaux votes : retélécharger les archives de scrutins sur data.assemblee-nationale.fr, relancer `index.py` puis `export_site.py`.
+
+Après toute modification de `data.js`, `textes.js` ou `index.html`, régénérer les pages :
+
+```
+python3 generer_pages.py
+```
+
+Le script met aussi à jour la date « Mis à jour le » du pied de page, à partir de la date de vérification des données.
 
 ## Règles du projet
 
