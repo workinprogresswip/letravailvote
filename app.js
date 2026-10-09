@@ -195,7 +195,7 @@ function vueMentions(){return `<div class="panel method"><h3 style="margin-top:0
 function render(){
   const h=location.hash.slice(1)||"mesures";const [v,arg]=h.split('/');
   const map={sujets:vueSujets,mesures:vueMesures,groupes:vueGroupes,comparer:vueComparer,methode:vueMethode,mentions:vueMentions};
-  $('#view').innerHTML=`<div class="view">${v==="loi"?vueLoi(arg):(map[v]||vueSujets)()}</div>`;
+  $('#view').innerHTML=`<div class="view">${v==="loi"?vueLoi(arg):(map[v]||vueMesures)()}</div>`;
   document.querySelectorAll('nav.tabs a').forEach(a=>a.setAttribute('aria-current',a.getAttribute('href')==='#'+(v==="loi"?"sujets":v)?'page':'false'));
   tip.hidden=true;
 }
