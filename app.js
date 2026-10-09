@@ -193,7 +193,7 @@ function vueMentions(){return `<div class="panel method"><h3 style="margin-top:0
 <p class="src">Dernière mise à jour des données et des textes : ${esc(VERIF)}.</p></div>`}
 // ---------- routeur
 function render(){
-  const h=location.hash.slice(1)||"sujets";const [v,arg]=h.split('/');
+  const h=location.hash.slice(1)||"mesures";const [v,arg]=h.split('/');
   const map={sujets:vueSujets,mesures:vueMesures,groupes:vueGroupes,comparer:vueComparer,methode:vueMethode,mentions:vueMentions};
   $('#view').innerHTML=`<div class="view">${v==="loi"?vueLoi(arg):(map[v]||vueSujets)()}</div>`;
   document.querySelectorAll('nav.tabs a').forEach(a=>a.setAttribute('aria-current',a.getAttribute('href')==='#'+(v==="loi"?"sujets":v)?'page':'false'));
