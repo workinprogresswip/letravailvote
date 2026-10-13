@@ -14,7 +14,7 @@ from pathlib import Path
 RACINE = Path(__file__).resolve().parent
 SITE = "https://www.letravailvote.fr"
 DOSSIERS = ["loi", "sujets", "groupes", "comparer", "effets"]
-FICHIERS = ["sujets.html", "effets.html", "groupes.html", "comparer.html", "methode.html", "mentions.html"]
+FICHIERS = ["concretement.html", "sujets.html", "effets.html", "groupes.html", "comparer.html", "methode.html", "mentions.html"]
 
 
 def lire_objet(texte, nom):
@@ -78,8 +78,8 @@ for c in DATA["categories"]:
     n = sum(l["categorie"] == c for l in LOIS)
     pages.append((f"/sujets/{slug(c)}", f"{c} : qui a voté quoi",
                   court(f"{n} texte{'s' if n > 1 else ''} depuis 2016 et le vote de chaque groupe. {CATDESC.get(c, '')}")))
-pages.append(("/effets", "Ce que font les lois",
-              f"Qui soutient quoi, par grandes masses : nouveaux droits, droits réduits, marge de manœuvre pour l'entreprise. {len(VOTEES)} lois travail depuis 2016, étiquetées une à une."))
+pages.append(("/concretement", "Ce qui a changé dans votre travail",
+              f"{len(DATA['mesures'])} mesures concrètes des dix dernières années : lesquelles ont été votées par les députés, lesquelles sont passées en 49.3, par ordonnance ou par décret."))
 for cle, lab, _gl, defi in EFFETS_DEF:
     ids = [l for l in LOIS if cle in EFFETS.get(l["id"], {})]
     pages.append((f"/effets/{slug(lab)}", f"{lab} : qui a voté quoi",

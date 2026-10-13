@@ -54,11 +54,11 @@ const POURVOUS={
 
 // ---------- étiquettes d'effet (voir page Méthode)
 const EFFETS_DEF=[
-["droit","Nouveau droit","d","Crée un droit pour les travailleurs, ou élargit un droit existant."],
-["moins","Droit réduit ou conditionné","m","Diminue un droit existant, ou le soumet à une condition nouvelle."],
-["marge","Marge de manœuvre pour l'entreprise","e","Déplace la règle vers l'accord d'entreprise, ou assouplit, plafonne ou supprime une contrainte qui pesait sur l'employeur."],
-["oblig","Nouvelle obligation pour l'employeur","o","Impose une démarche, une négociation ou une publication, distincte du droit créé."],
-["temp","Temporaire ou expérimental","t","Borné dans le temps, ou limité à des territoires ou à des entreprises désignés."]
+["droit","Nouveaux droits","+","Crée un droit pour les travailleurs, ou élargit un droit existant."],
+["oblig","Obligations pour l'employeur","!","Impose à l'employeur une démarche, une négociation ou une publication, distincte du droit créé."],
+["marge","Flexibilisation","↔","Déplace la règle vers l'accord d'entreprise, ou assouplit, plafonne ou supprime une contrainte qui pesait sur l'employeur."],
+["moins","Droits restreints ou conditionnés","−","Diminue un droit existant, ou le soumet à une condition ou une obligation nouvelle pour le travailleur."],
+["temp","Dispositifs provisoires","◔","Borné dans le temps, ou limité à des territoires ou à des entreprises désignés."]
 ];
 const EFFETS={
 "loi-travail-2016":{marge:"Le temps de travail peut être fixé par accord d'entreprise avant l'accord de branche, et la loi inscrit des indicateurs de difficultés économiques pour le licenciement économique.",droit:"Création du compte personnel d'activité."},

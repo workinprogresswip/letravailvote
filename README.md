@@ -12,12 +12,12 @@ Site statique qui montre comment chaque groupe de l'Assemblée nationale a voté
 |---|---|
 | `index.html` | la page, sa structure et ses métadonnées |
 | `styles.css` | toute la mise en forme (thème clair et sombre) |
-| `app.js` | les vues : par sujet, concrètement, par groupe, comparer, méthode |
+| `app.js` | les vues : qui vote quoi (accueil, par catégorie d'effet), concrètement, par sujet, par groupe, comparer, fiche loi avec hémicycle, méthode |
 | `data.js` | les données de votes, générées, à ne pas modifier à la main |
 | `textes.js` | les textes de présentation des lois, écrits à la main |
 | `vercel.json` | configuration d'hébergement |
 | `generer_pages.py` | crée une page par adresse (loi, sujet, groupe, duel) avec son titre et son aperçu de partage, plus `sitemap.xml` et `robots.txt` |
-| `loi/`, `sujets/`, `groupes/`, `comparer/`, `*.html` | pages générées, à ne pas modifier à la main |
+| `loi/`, `sujets/`, `groupes/`, `comparer/`, `effets/`, `*.html` | pages générées, à ne pas modifier à la main |
 
 ## Déployer sur Vercel
 

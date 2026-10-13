@@ -1,5 +1,6 @@
 {
   "cleanUrls": true,
+  "redirects": [{ "source": "/effets", "destination": "/", "permanent": true }],
   "headers": [
     { "source": "/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }] },
     { "source": "/(data|textes|app).js", "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }] }

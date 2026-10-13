@@ -225,3 +225,161 @@ table.acc td.self{background:transparent;color:var(--muted)}
 .acleg i{box-shadow:inset 0 0 0 1px var(--line)}
 
 a.ebadge:hover{border-color:var(--ink)}
+
+/* ---------- accueil : qui vote quoi */
+[id]{scroll-margin-top:64px}
+.hero{margin:4px 0 20px}
+.hero h2{font-size:clamp(28px,4.4vw,42px);max-width:22ch}
+.hero p{margin:10px 0 0;color:var(--ink2);max-width:68ch}
+table.synth{border-collapse:separate;border-spacing:4px;font-family:"IBM Plex Mono",monospace;font-size:14px;width:100%;min-width:560px}
+table.synth thead th{font-family:"Squada One",sans-serif;font-weight:400;font-size:15px;letter-spacing:.04em;color:var(--ink2);text-align:center;padding:0 0 4px}
+table.synth thead th a{text-decoration:none}
+table.synth thead th a:hover{text-decoration:underline}
+table.synth tbody th{font-family:Lato,sans-serif;font-size:13.5px;font-weight:700;text-align:left;white-space:nowrap;padding-right:10px;position:sticky;left:0;background:var(--surface);z-index:1}
+table.synth tbody th .sl{text-decoration:none;display:inline-flex;align-items:center;gap:7px}
+table.synth tbody th .sl:hover{text-decoration:underline}
+table.synth tbody th .ebadge.mini{margin:0}
+table.synth td{height:42px;min-width:40px;text-align:center;border-radius:6px;font-weight:600;font-variant-numeric:tabular-nums}
+table.synth td.vide{color:var(--muted);background:transparent;font-weight:400}
+.hleg{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--muted)}
+.hleg i{display:block;width:30px;height:16px;border-radius:4px;box-shadow:inset 0 0 0 1px var(--line2)}
+.hleg span{margin:0 6px}
+.effcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:18px}
+.ech{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:6px 16px;margin-bottom:8px}
+.ech .q{font-family:Lato,sans-serif;text-transform:none;letter-spacing:0;font-weight:700;font-size:18px;margin-top:10px;line-height:1.3}
+.ech .src{margin:6px 0 0}
+.effcard .efdef{margin:0 0 14px}
+/* colonnes à 100 % */
+.cols{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:6px;align-items:end}
+.col{display:grid;grid-template-rows:auto 190px auto auto;gap:4px;justify-items:stretch;text-align:center;text-decoration:none;min-width:0}
+.cpct{font-family:"Squada One",sans-serif;font-size:26px;line-height:1}
+.cpct small{font-size:.6em;margin-left:1px}
+.cbar{display:flex;flex-direction:column;border-radius:5px;overflow:hidden;gap:2px;height:100%}
+.cbar i{display:block;min-height:2px}
+.cbar .p{background:var(--pour)}.cbar .c{background:var(--contre)}.cbar .a{background:var(--abst)}
+.col:hover .cbar{outline:2px solid var(--ink);outline-offset:2px}
+.cs{font-family:"Squada One",sans-serif;font-size:15px;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cn{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted)}
+.colleg{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;margin-top:12px;font-size:12.5px;color:var(--ink2)}
+.colleg span{display:inline-flex;align-items:center;gap:6px}
+.colleg i{display:block;width:12px;height:12px;border-radius:3px}
+.colleg .p{background:var(--pour)}.colleg .c{background:var(--contre)}.colleg .a{background:var(--abst)}
+@media (max-width:620px){.col{grid-template-rows:auto 150px auto auto}.cpct{font-size:17px}.cs{font-size:12px}.cols{gap:3px}}
+/* mini-tableau loi par loi */
+table.mini{border-collapse:separate;border-spacing:3px;font-size:13px;margin-top:12px}
+table.mini thead th{font-family:"Squada One",sans-serif;font-weight:400;font-size:13px;letter-spacing:.04em;color:var(--ink2);text-align:center;min-width:26px}
+table.mini tbody th{text-align:left;font-weight:600;padding-right:12px;min-width:200px;max-width:320px;line-height:1.25;position:sticky;left:0;background:var(--surface);z-index:1}
+table.mini tbody th a{text-decoration:none}
+table.mini tbody th a:hover{text-decoration:underline}
+table.mini tbody th small{display:block;font-weight:400;color:var(--muted);font-size:11.5px;font-family:"IBM Plex Mono",monospace}
+table.mini td{text-align:center}
+/* encart Concrètement */
+a.teaser{display:grid;gap:12px;text-decoration:none;background:var(--ink);color:var(--bg);border-radius:12px;padding:20px;margin-top:6px}
+a.teaser .k{font-family:"Squada One",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:14px;color:var(--mint)}
+a.teaser h3{font-size:clamp(22px,3vw,30px);margin-top:4px}
+a.teaser p{margin:6px 0 0;opacity:.8}
+a.teaser .go{font-weight:700;color:var(--mint)}
+a.teaser:hover .go{text-decoration:underline}
+a.teaser .vh2{color:var(--bg)}
+.vnv{margin:6px 0 8px}
+.vh2{display:flex;gap:3px;font-size:13px;margin-bottom:4px}
+.vh2 span{border-bottom:3px solid var(--pour);padding-bottom:3px}
+.vh2 span+span{border-bottom-color:var(--contre);text-align:right}
+.vh2 b{font-family:"Squada One",sans-serif;font-size:22px;font-weight:400}
+.msum{height:auto;min-height:34px}
+.msum i{font-style:normal;display:flex!important;flex-direction:column;align-items:center;justify-content:center;padding:4px 2px;overflow:hidden;min-width:0}
+.msum i b{font-size:14px}
+.msum i span{font-family:Lato,sans-serif;font-size:10.5px;font-weight:600;line-height:1.1;text-align:center;opacity:.95}
+@media (max-width:620px){.msum i span{display:none}}
+.stjump{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.stjump .badge{text-decoration:none}
+/* fiche loi : le vote */
+.votebloc{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:18px}
+.votebloc h3{font-size:clamp(24px,3.4vw,34px);margin:8px 0 4px}
+.vgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:18px 26px;align-items:start;margin-top:12px}
+@media (max-width:760px){.vgrid{grid-template-columns:1fr}}
+svg.hemi{width:100%;height:auto;display:block}
+svg.hemi .pour{fill:var(--pour)}svg.hemi .contre{fill:var(--contre)}svg.hemi .abstention{fill:var(--abst)}svg.hemi .censure{fill:var(--censure)}
+svg.hemi .nv{fill:var(--line)}
+.hleg2{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;font-size:12.5px;color:var(--ink2);margin-top:8px}
+.hleg2 span{display:inline-flex;align-items:center;gap:6px}
+.hleg2 i{width:11px;height:11px;border-radius:50%;display:block}
+.hleg2 .pour{background:var(--pour)}.hleg2 .contre{background:var(--contre)}.hleg2 .abstention{background:var(--abst)}.hleg2 .censure{background:var(--censure)}.hleg2 .nv{background:var(--line)}
+.division{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+.dcol .dh{display:flex;justify-content:space-between;align-items:baseline;border-bottom:3px solid;padding-bottom:4px;margin-bottom:6px}
+.dcol .dh span{font-family:"Squada One",sans-serif;text-transform:uppercase;font-size:18px;letter-spacing:.03em}
+.dcol .dh b{font-family:"Squada One",sans-serif;font-weight:400;font-size:34px;line-height:1}
+.dcol.pour .dh{border-color:var(--pour)}.dcol.pour .dh b{color:var(--pour)}
+.dcol.contre .dh{border-color:var(--contre)}.dcol.contre .dh b{color:var(--contre)}
+.dcol.abstention .dh{border-color:var(--abst)}
+.dcol.censure .dh{border-color:var(--censure)}.dcol.censure .dh b{color:var(--censure)}
+.dr{display:grid;grid-template-columns:minmax(0,1fr) 44px 30px;gap:8px;align-items:center;font-size:13px;padding:3px 0}
+.dr .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dr .bb{height:8px;background:var(--line2);border-radius:4px;overflow:hidden}
+.dr .bb i{display:block;height:100%;background:currentColor;opacity:.75}
+.dcol.pour .bb{color:var(--pour)}.dcol.contre .bb{color:var(--contre)}.dcol.abstention .bb{color:var(--abst)}.dcol.censure .bb{color:var(--censure)}
+.dr .nb{font-family:"IBM Plex Mono",monospace;font-size:12.5px;text-align:right}
+.division.one{grid-template-columns:1fr}
+/* comparer */
+.rank{display:grid;gap:2px}
+.rk{display:grid;grid-template-columns:minmax(120px,180px) minmax(0,1fr) 62px 54px;gap:12px;align-items:center;padding:7px 4px;border-top:1px solid var(--line2);text-decoration:none;border-radius:6px}
+.rk:first-child{border-top:0}
+.rk:hover{background:var(--chip)}
+.rk .nm{font-weight:700;font-size:14px}
+.rk .rb{height:18px;background:var(--line2);border-radius:4px;overflow:hidden}
+.rk .rb i{display:block;height:100%;background:var(--ink)}
+.rk .pc{font-family:"Squada One",sans-serif;font-size:24px;text-align:right;line-height:1}
+.rk .src{font-family:"IBM Plex Mono",monospace;text-align:right}
+@media (max-width:620px){.rk{grid-template-columns:1fr auto;gap:4px 10px}.rk .rb{grid-column:1/-1;grid-row:2}.rk .src{display:none}}
+.duelpick{display:grid;gap:10px;margin-bottom:16px}
+.duelpick .k{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px}
+.duelpick .k::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--ink)}
+.duelpick .k.b::before{background:transparent;border:2.5px solid var(--ink)}
+.duelpick .famchips{margin-bottom:0}
+.chip.autre{opacity:.45}
+.vs{display:grid;justify-items:center;text-align:center;gap:2px;min-width:180px}
+.vs .ga,.vs .gb{font-weight:700;font-size:14px}
+.vs .ga::before,.vs .gb::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--ink);margin-right:6px}
+.vs .gb::before{background:transparent;border:2px solid var(--ink)}
+.stack .same{background:var(--ink)}.stack .diff{background:var(--abst)}
+.stack .same b{color:var(--bg)}
+.db,.dbh{display:grid;grid-template-columns:minmax(150px,240px) 56px minmax(0,1fr) 56px;gap:12px;align-items:center;padding:9px 0;border-top:1px solid var(--line2);text-decoration:none}
+.dbh{border-top:0;padding:0 0 4px;font-size:12.5px;font-weight:700;color:var(--ink2)}
+.dbh .pa,.dbh .pb{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;overflow:visible}
+.dbh .dot{position:static;transform:none}
+.db .nm{font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:7px}
+.db .ebadge.mini{margin:0}
+.db .pa,.db .pb{font-family:"IBM Plex Mono",monospace;font-size:13px;text-align:center}
+.db:hover .nm{text-decoration:underline}
+.track{position:relative;height:22px;background:linear-gradient(to right,transparent calc(50% - .5px),var(--line) calc(50% - .5px),var(--line) calc(50% + .5px),transparent calc(50% + .5px)),linear-gradient(var(--line2),var(--line2)) center/100% 4px no-repeat;border-radius:4px}
+.track .seg{position:absolute;top:50%;height:4px;transform:translateY(-50%);background:var(--ink2)}
+.dot{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;transform:translate(-50%,-50%);display:inline-block}
+.dot.da{background:var(--ink)}
+.dot.dbb{background:var(--surface);border:3px solid var(--ink)}
+@media (max-width:620px){.db,.dbh{grid-template-columns:44px minmax(0,1fr) 44px}.db .nm{grid-column:1/-1}.dbh>span:first-child{display:none}}
+.tl{display:flex;gap:6px;padding:4px 0 8px}
+.tli{flex:none;width:92px;display:grid;justify-items:center;gap:4px;text-align:center;text-decoration:none;padding:8px 4px;border-radius:10px;border:1px solid var(--line2)}
+.tli.diff{border:2px solid var(--ink);background:var(--chip)}
+.tli .y{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted)}
+.tli .t{font-size:11.5px;line-height:1.2;color:var(--ink2)}
+.tlleg{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12.5px;color:var(--ink2);margin:6px 0 10px}
+.tlleg .mk{display:inline-block;width:14px;height:14px;border:2px solid var(--ink);border-radius:4px;background:var(--chip);vertical-align:-2px}
+details.efdet.panel{margin-top:18px}
+details.efdet.panel summary{font-size:15px}
+.duel .vs .duelnum{font-size:66px}
+.col.vide .cpct{color:var(--muted)}
+.col.vide .cbar{border:1.5px dashed var(--line);background:transparent}
+.col.vide .cs{color:var(--muted)}
+.dbleg{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:13.5px;font-weight:700;margin-bottom:6px}
+.dbleg>span{display:inline-flex;align-items:center;gap:7px}
+.dbleg .dot{position:static;transform:none}
+.dbleg .src{font-weight:400}
+@media (max-width:620px){
+ table.synth{min-width:0;font-size:12px;border-spacing:2px}
+ table.synth tbody th{white-space:normal;font-size:11.5px;line-height:1.2;max-width:92px;padding-right:4px}
+ table.synth tbody th .ebadge.mini{display:none}
+ table.synth thead th{font-size:12px}
+ table.synth td{min-width:27px;height:34px;border-radius:4px}
+ .cpct{font-size:14px}.cpct small{display:none}
+ .effcard,.overview,.votebloc{padding:14px}
+}
