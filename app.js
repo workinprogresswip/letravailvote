@@ -100,7 +100,7 @@ function vueLoi(id){
   const r=l.reference;
   return `<a class="back" href="/sujets">← Tous les sujets</a>
 <div class="law-head"><div><span class="tag">${esc(l.categorie)}</span> <span class="tag">${l.annee}</span>${l.mode==="493"?' <span class="tag">Adoptée par 49.3</span>':''}</div><h2>${esc(l.titre)}</h2><div class="bref">${esc(T.bref||'')}</div></div>
-<div class="grid2"><div class="panel"><h3>Ce que contient le texte</h3>${POURVOUS[id]?`<div class="pourvous"><span class="k">Ce que ça change pour vous</span><p>${esc(POURVOUS[id])}</p></div>`:''}${T.note493?`<div class="note493"><b>Pas de vote sur le texte.</b> ${esc(T.note493)}</div>`:''}<p>${esc(T.contenu||'')}</p>
+<div class="grid2"><div class="panel"><h3>Ce que contient le texte</h3>${effBadges(id,1)}${SANS_EFFET[id]?`<p class="src">Ce texte n'est rangé sous aucune étiquette d'effet. ${esc(SANS_EFFET[id])}</p>`:''}${POURVOUS[id]?`<div class="pourvous"><span class="k">Ce que ça change pour vous</span><p>${esc(POURVOUS[id])}</p></div>`:''}${T.note493?`<div class="note493"><b>Pas de vote sur le texte.</b> ${esc(T.note493)}</div>`:''}<p>${esc(T.contenu||'')}</p>
 ${p?`<p class="src">${esc(p.statut)} · <a href="${esc(p.source)}" target="_blank" rel="noopener">source</a> · Vérifié le ${esc(VERIF)}</p>`:''}<p class="src">Texte de présentation rédigé pour ce site, à relire avant publication.</p></div>
 <div class="panel"><h3>Les groupes en un coup d'œil</h3><div class="flist">${FAMS.filter(f=>famPos(l,f.id)!=="none").map(f=>{const v=l.mode==="493"?null:l.reference.f[f.id];const det=v?`${v[0]} pour · ${v[1]} contre · ${v[2]} abst.`:'';return `<div class="frow" style="grid-template-columns:auto minmax(0,1fr)" data-tip="${tipAttr(l,f.id)}">${cellBig(l,f.id)}<span>${esc(COURT[f.id])} <span class="src">· ${LAB[famPos(l,f.id)]}${det?` · <span class="num">${det}</span>`:''}</span></span></div>`}).join('')}</div></div></div>
 <div style="display:grid;gap:18px;margin-top:18px">
@@ -134,15 +134,89 @@ ${DATA.categories.map(c=>{const ls=LOIS.filter(l=>l.categorie===c&&l.mode!=="493
 ${legend()}</section>
 <div class="panel">${DATA.categories.map(c=>{const ls=LOIS.filter(l=>l.categorie===c&&famPos(l,f)!=="none");if(!ls.length)return '';return `<h3 style="font-size:18px;margin-top:16px">${esc(c)}</h3><div class="flist">${ls.map(l=>`<a class="frow" href="/loi/${l.id}" data-tip="${tipAttr(l,f)}">${cell(famPos(l,f),1)}<span><span class="ft">${esc(l.titre)}</span> <span class="src">· ${LAB[famPos(l,f)]}</span></span><span class="fy">${l.annee}</span></a>`).join('')}</div>`}).join('')}</div>`;
 }
-let cmpA="Macronistes",cmpB="RN";
+
+// ---------- vue par effet
+const EFDEF=Object.fromEntries(EFFETS_DEF.map(e=>[e[0],e]));
+const EFSLUG=Object.fromEntries(EFFETS_DEF.map(e=>[slugEff(e[1]),e[0]]));
+function slugEff(s){return s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/œ/g,'oe').replace(/æ/g,'ae').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
+function effUrl(k){return `/effets/${slugEff(EFDEF[k][1])}`}
+function loisEffet(k){return LOIS.filter(l=>EFFETS[l.id]&&EFFETS[l.id][k])}
+function partPour(t){const n=t.pour+t.contre+t.abstention;return n?Math.round(t.pour/n*100):null}
+function effBadges(id,avecTexte){
+  const e=EFFETS[id];if(!e)return '';
+  return `<div class="ebadges">${Object.keys(e).map(k=>`<a class="ebadge" href="${effUrl(k)}" data-tip="${esc(`<b>${EFDEF[k][1]}</b><br>${EFDEF[k][3]}`)}"><i>${EFDEF[k][2]}</i>${esc(EFDEF[k][1])}</a>`).join('')}</div>${avecTexte?`<ul class="ewhy">${Object.entries(e).map(([k,j])=>`<li><b>${esc(EFDEF[k][1])}</b> ${esc(j)}</li>`).join('')}</ul>`:''}`;
+}
+function effBloc(k){
+  const [,lab,gl,def]=EFDEF[k];
+  const ls=loisEffet(k);const votees=ls.filter(l=>l.mode!=="493");const n493=ls.length-votees.length;
+  const rows=FAMS.map(f=>({f,t:tally(votees,f.id)})).filter(r=>r.t.pour+r.t.contre+r.t.abstention>=3);
+  const multi=ls.filter(l=>Object.keys(EFFETS[l.id]).length>1).length;
+  return `<section class="overview eff">
+<div class="cat-head"><h2><a class="ebadge big" href="${effUrl(k)}"><i>${gl}</i>${esc(lab)}</a></h2><p>${ls.length} texte${ls.length>1?'s':''}${n493?` · dont ${n493} passé${n493>1?'s':''} en 49.3, donc sans vote`:''}</p></div>
+<p class="efdef">${esc(def)}</p>
+<div class="eff-row head"><div class="nm">Groupe</div><div>Ses votes sur ces textes</div><div class="lg">Détail</div><div class="pct">% pour</div></div>
+${rows.map(r=>{const pp=partPour(r.t);const nn=r.t.pour+r.t.contre+r.t.abstention;
+ return `<div class="eff-row"><div class="nm">${esc(COURT[r.f.id])}<small>${nn} texte${nn>1?'s':''} voté${nn>1?'s':''}</small></div>
+<div data-tip="${esc(`<b>${COURT[r.f.id]}</b><br>${legende_txt(r.t)}`)}">${stackBar(r.t)}</div>
+<div class="lg">${legende_txt(r.t)}</div><div class="pct">${pp}&nbsp;%</div></div>`}).join('')}
+${multi?`<p class="src efnote">${multi} de ces textes port${multi>1?'ent':'e'} aussi une autre étiquette. Voter contre un texte rangé ici peut tenir à ce qu'il contient par ailleurs : la fiche de chaque loi détaille toutes ses étiquettes.</p>`:''}
+<p class="src efnote">Les groupes qui ont voté moins de 3 de ces textes ne sont pas affichés.</p>
+<details class="efdet"><summary>Les ${ls.length} texte${ls.length>1?'s':''} de cette étiquette</summary>
+<div class="flist">${ls.map(l=>{const aut=Object.keys(EFFETS[l.id]).filter(x=>x!==k);
+ return `<a class="frow efrow" href="/loi/${l.id}"><span><span class="ft">${esc(l.titre)}</span>${aut.map(x=>`<span class="ebadge mini" data-tip="${esc(EFDEF[x][1])}"><i>${EFDEF[x][2]}</i></span>`).join('')}<span class="src"> · ${esc(EFFETS[l.id][k])}</span></span><span class="fy">${l.annee}</span></a>`}).join('')}</div></details>
+</section>`;
+}
+function vueEffets(){
+  const un=EFSLUG[effSel]||null;
+  const sans=Object.keys(SANS_EFFET).map(id=>BYID[id]).filter(Boolean);
+  return `${un?`<a class="back" href="/effets">← Toutes les étiquettes</a>`:'<div class="cat-head"><h2>Ce que font les lois</h2><p>Qui soutient quoi, par grandes masses.</p></div>'}
+${un?'':`<p class="efintro">Chaque texte reçoit une ou plusieurs étiquettes, posées à partir de ce qu'il contient, et justifiées texte par texte. Une même loi peut étendre un droit et assouplir une règle : elle apparaît alors dans les deux listes. Ces étiquettes décrivent l'effet, elles ne disent pas s'il est souhaitable. <a href="/methode">Comment elles sont posées</a>.</p>`}
+${(un?[un]:EFFETS_DEF.map(e=>e[0])).map(effBloc).join('')}
+${un?'':`${sans.length?`<section class="overview"><div class="cat-head"><h2 style="font-size:21px">Les textes qu'on ne range pas</h2><p>Aucune règle n'en est sortie.</p></div>
+<div class="flist">${sans.map(l=>`<a class="frow efrow" href="/loi/${l.id}"><span><span class="ft">${esc(l.titre)}</span><span class="src"> · ${esc(SANS_EFFET[l.id])}</span></span><span class="fy">${l.annee}</span></a>`).join('')}</div></section>`:''}`}
+<p class="src">Barres : part des textes de l'étiquette sur lesquels le groupe a voté pour (vert), contre (rouge), ou s'est abstenu (gris).</p>`;
+}
+let effSel=null;
+let cmpA="Macronistes",cmpB="RN",cmpDuel=false;
+function accord(a,b){
+  let n=0,acc=0;const rows=[];
+  for(const l of LOIS){if(l.mode==="493")continue;
+    const pa=famPos(l,a),pb=famPos(l,b);
+    if(["none","absent"].includes(pa)||["none","absent"].includes(pb))continue;
+    n++;const same=pa===pb;if(same)acc++;rows.push({l,a:pa,b:pb,same});}
+  return {n,acc,rows,pct:n?Math.round(acc/n*100):null};
+}
+const PALIERS=[8,20,36,62,88];
+function palier(pct){const i=pct>=85?4:pct>=70?3:pct>=55?2:pct>=40?1:0;return [PALIERS[i],i>=3];}
+function matriceAccord(){
+  const fs=FAMS.filter(f=>{const t=tally(LOIS.filter(l=>l.mode!=="493"),f.id);return t.pour+t.contre+t.abstention>=10});
+  return `<div class="scroll"><table class="acc"><thead><tr><th></th>${fs.map(f=>`<th><span>${esc(COURT[f.id])}</span></th>`).join('')}</tr></thead>
+<tbody>${fs.map(fa=>`<tr><th scope="row">${esc(COURT[fa.id])}</th>${fs.map(fb=>{
+  if(fa.id===fb.id)return `<td class="self"></td>`;
+  const r=accord(fa.id,fb.id);
+  if(r.pct===null||r.n<5)return `<td class="self" data-tip="${esc(`${COURT[fa.id]} et ${COURT[fb.id]} ont voté ensemble sur moins de 5 textes`)}">·</td>`;
+  const [w,inv]=palier(r.pct);
+  return `<td class="ac${inv?' inv':''}" style="--w:${w}%"><a href="${cmpUrl(fa.id,fb.id)}" data-tip="${esc(`<b>${COURT[fa.id]} et ${COURT[fb.id]}</b><br>${r.acc} positions identiques sur ${r.n} textes votés par les deux`)}">${r.pct}</a></td>`}).join('')}</tr>`).join('')}</tbody></table></div>`;
+}
 function vueComparer(){
-  const ls=LOIS.filter(l=>l.mode!=="493");let acc=0,n=0;const rows=[];
-  for(const l of ls){const a=famPos(l,cmpA),b=famPos(l,cmpB);if(["none","absent"].includes(a)||["none","absent"].includes(b))continue;n++;const same=a===b;if(same)acc++;rows.push({l,a,b,same})}
-  const opt=v=>FAMS.map(f=>`<option value="${esc(f.id)}"${f.id===v?' selected':''}>${esc(COURT[f.id])}</option>`).join('');
-  return `<div class="sel"><label for="ca">Comparer</label><select id="ca">${opt(cmpA)}</select><label for="cb">avec</label><select id="cb">${opt(cmpB)}</select></div>
-<div class="panel">${n?`<div style="display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;margin-bottom:14px"><div class="big num">${Math.round(acc/n*100)} %</div><p style="margin:0;max-width:44ch">${esc(COURT[cmpA])} et ${esc(COURT[cmpB])} ont eu la même position sur <b>${acc} des ${n}</b> lois où les deux groupes ont voté.</p></div>
-<div class="flist">${rows.map(r=>`<a class="frow" href="/loi/${r.l.id}" style="grid-template-columns:auto auto minmax(0,1fr) auto">${cell(r.a,1)}${cell(r.b,1)}<span><span class="ft">${esc(r.l.titre)}</span> <span class="src">· ${r.same?'même position':'positions différentes'}</span></span><span class="fy">${r.l.annee}</span></a>`).join('')}</div>
-<p class="src" style="margin-top:12px">Colonne de gauche : ${esc(COURT[cmpA])}. Colonne de droite : ${esc(COURT[cmpB])}. Les textes adoptés par 49.3 ne sont pas comptés.</p>`:`<p>Ces deux groupes n'ont jamais voté sur les mêmes lois de cette sélection.</p>`}</div>`;
+  if(!cmpDuel){
+    return `<div class="cat-head"><h2>Qui vote comme qui</h2><p>Part de positions identiques sur les textes votés par les deux groupes.</p></div>
+<p class="efintro">Chaque case dit sur quelle part des textes les deux groupes ont eu la même position, pour, contre ou abstention. Plus la case est foncée, plus les deux groupes votent pareil. Cliquez sur une case pour voir texte par texte.</p>
+${matriceAccord()}
+<div class="acleg"><span>Votent rarement pareil</span>${PALIERS.map(w=>`<i style="--w:${w}%"></i>`).join('')}<span>Votent presque toujours pareil</span></div>
+<p class="src" style="margin-top:10px">Les textes adoptés par 49.3 ne sont pas comptés : l'Assemblée ne les a jamais votés. Les groupes ayant voté moins de 10 textes ne sont pas affichés, la comparaison n'aurait pas de sens.</p>`;
+  }
+  const r=accord(cmpA,cmpB);
+  const des=r.rows.filter(x=>!x.same),mem=r.rows.filter(x=>x.same);
+  const ligne=x=>`<a class="frow" href="/loi/${x.l.id}" style="grid-template-columns:auto auto minmax(0,1fr) auto">${cellBig(x.l,cmpA)}${cellBig(x.l,cmpB)}<span><span class="ft">${esc(x.l.titre)}</span> <span class="src">· ${LAB[x.a]} / ${LAB[x.b]}</span></span><span class="fy">${x.l.annee}</span></a>`;
+  return `<a class="back" href="/comparer">← Tous les groupes</a>
+<div class="sel"><label for="ca">Comparer</label><select id="ca">${FAMS.map(f=>`<option value="${esc(f.id)}"${f.id===cmpA?' selected':''}>${esc(COURT[f.id])}</option>`).join('')}</select><label for="cb">avec</label><select id="cb">${FAMS.map(f=>`<option value="${esc(f.id)}"${f.id===cmpB?' selected':''}>${esc(COURT[f.id])}</option>`).join('')}</select></div>
+${r.n?`<div class="duel"><div class="duelnum">${r.pct}&nbsp;%</div><div><p style="margin:0 0 8px"><b>${esc(COURT[cmpA])}</b> et <b>${esc(COURT[cmpB])}</b> ont eu la même position sur <b>${r.acc} des ${r.n}</b> textes votés par les deux.</p>
+<div class="stack" style="height:26px"><i class="p" style="flex:${r.acc}"><b>${r.acc}</b></i>${r.n-r.acc?`<i class="c" style="flex:${r.n-r.acc}"><b>${r.n-r.acc}</b></i>`:''}</div>
+<div class="lg" style="margin-top:6px">${r.acc} même position · ${r.n-r.acc} position différente</div></div></div>
+${des.length?`<div class="panel"><h3>Là où ils ne sont pas d'accord</h3><div class="flist">${des.map(ligne).join('')}</div></div>`:''}
+${mem.length?`<div class="panel" style="margin-top:18px"><h3>Là où ils votent pareil</h3><div class="flist">${mem.map(ligne).join('')}</div></div>`:''}
+<p class="src" style="margin-top:12px">Colonne de gauche : ${esc(COURT[cmpA])}. Colonne de droite : ${esc(COURT[cmpB])}. Les textes adoptés par 49.3 ne sont pas comptés.</p>`:`<div class="panel"><p>Ces deux groupes n'ont jamais voté sur les mêmes textes.</p></div>`}`;
 }
 function vueMethode(){return `<div class="panel method"><h3 style="margin-top:0">D'où viennent les chiffres</h3>
 <p>Tous les votes proviennent des données ouvertes de l'Assemblée nationale (archives des scrutins publics des 14e, 15e, 16e et 17e législatures). Chaque vote affiché renvoie à sa page officielle. Un échantillon de 10 scrutins a été vérifié groupe par groupe contre ces pages : les chiffres sont identiques.</p>
@@ -150,14 +224,18 @@ function vueMethode(){return `<div class="panel method"><h3 style="margin-top:0"
 <h3>La position d'un groupe</h3><p>C'est la position qui recueille le plus de voix parmi les députés du groupe qui ont voté : pour, contre ou abstention. Si aucun député du groupe n'a voté, le groupe « n'a pas pris part au vote ». Les « votants » sont les députés qui ont voté pour, contre ou se sont abstenus : ce n'est pas le nombre de présents.</p>
 <h3>Le 49.3</h3><p>Quand le gouvernement engage sa responsabilité (article 49.3 de la Constitution), le texte est adopté sans vote, sauf si une motion de censure est votée. Pour ces textes, on montre qui a voté la censure. Ne pas voter la censure ne veut pas dire soutenir le texte.</p>
 <h3>Les familles politiques</h3><p>Les groupes changent de nom d'une législature à l'autre. On les regroupe en familles (par exemple LREM, puis Renaissance, puis Ensemble pour la République), en s'appuyant sur le parcours des députés d'un groupe à l'autre. Le nom officiel du groupe au moment du vote reste affiché sur chaque page. Les députés non inscrits ne sont pas montrés dans les tableaux.</p>
+<h3>Les étiquettes d'effet</h3><p>Chaque texte reçoit une ou plusieurs étiquettes qui décrivent ce qu'il fait, pas ce qu'il vaut. Elles sont posées à partir du contenu du texte, et chacune est justifiée en une phrase sur la fiche de la loi. Une loi peut en porter plusieurs : la loi Travail de 2016 crée le compte personnel d'activité et fait passer le temps de travail à l'accord d'entreprise, elle porte donc les deux étiquettes correspondantes.</p>
+<ul class="mlist">${EFFETS_DEF.map(e=>`<li><b>${esc(e[1])}</b> ${esc(e[3])}</li>`).join('')}</ul>
+<p>Deux textes ne sont rangés sous aucune étiquette, parce qu'aucune règle n'en est sortie : le projet de retraite universelle, abandonné en mars 2020, et la proposition d'abrogation de 2024, vidée de son contenu en commission puis rejetée.</p>
+<p>Ces étiquettes sont le seul endroit du site où un jugement de contenu est porté. Elles décrivent la direction d'un texte, pas sa valeur : « marge de manœuvre pour l'entreprise » n'est ni un reproche ni un compliment. Si une étiquette vous paraît mal posée, écrivez-nous, l'argument et la source nous intéressent.</p>
 <h3>Neutralité</h3><p>Aucun vote n'est qualifié de « bon » ou de « mauvais ». Vert pour « a voté pour », rouge pour « a voté contre », gris pour l'abstention, violet pour « a voté la censure ». Chaque case porte aussi un symbole, pour rester lisible sans distinguer les couleurs.</p></div>`}
 
-const STAT={article:["Voté article par article","vote","Les députés se sont prononcés sur la mesure elle-même, en scrutin public."],
+const STAT={article:["Voté par les députés","vote","Les députés se sont prononcés sur la mesure elle-même, en scrutin public."],
  loi:["Voté dans une loi","vote","La mesure figure dans une loi votée par l'Assemblée, mais le vote a porté sur l'ensemble du texte."],
  budget:["Voté dans un budget","partiel","Arrivé par amendement budgétaire, sans examen en commission ni étude d'impact."],
- "493":["Jamais voté : 49.3","novote","Le gouvernement a engagé sa responsabilité. Le texte est adopté sans vote, sauf censure."],
- ordonnance:["Jamais voté : ordonnance","novote","Règle écrite par le gouvernement. Les députés ont voté l'autorisation de l'écrire, puis sa ratification."],
- decret:["Jamais voté : décret","novote","Fixé par le gouvernement, sans passage devant le Parlement."],
+ "493":["Passé en 49.3","novote","Le texte est bien en vigueur, mais les députés ne l'ont jamais voté : le gouvernement a engagé sa responsabilité, et seule une motion de censure aurait pu l'arrêter."],
+ ordonnance:["Écrit par ordonnance","novote","Le texte est en vigueur. Il a été écrit par le gouvernement : les députés ont voté l'autorisation de l'écrire, puis sa ratification, pas son contenu."],
+ decret:["Imposé par décret","novote","Le texte est en vigueur. Il a été fixé par le gouvernement seul, sans passage devant le Parlement."],
  rien:["Aucun texte","novote","Rien dans la loi. La pratique dépend des accords d'entreprise ou de consignes sans valeur contraignante."]};
 const ORDRE_ST=["article","loi","budget","493","ordonnance","decret","rien"];
 function vueMesures(){
@@ -167,7 +245,7 @@ function vueMesures(){
     return `<i style="flex:${v};background:${c}" data-tip="${esc(`<b>${STAT[k][0]}</b><br>${v} mesure${v>1?'s':''}`)}">${v}</i>`};
   return `<section class="overview"><div class="cat-head"><h2>Ce qui a changé dans votre travail</h2><p>${n} mesures concrètes des dix dernières années, et la façon dont elles sont arrivées dans votre quotidien.</p></div>
 <div class="msum">${ORDRE_ST.map(seg).join('')}</div>
-<p class="src"><b>${votees} mesures sur ${n}</b> ont été votées par l'Assemblée, d'une façon ou d'une autre. ${n-votees} ne l'ont jamais été : 49.3, ordonnance, décret, ou absence totale de texte.</p></section>
+<p class="src"><b>${votees} mesures sur ${n}</b> ont été votées par l'Assemblée, d'une façon ou d'une autre. Les ${n-votees} autres s'appliquent sans que les députés aient voté dessus : 49.3, ordonnance, décret, ou aucun texte du tout.</p></section>
 ${ORDRE_ST.map(k=>{const ms=parSt[k];if(!ms.length)return '';const [lab,cls,desc]=STAT[k];
  return `<div class="mgroup"><h2>${esc(lab)}</h2><span>${ms.length} mesure${ms.length>1?'s':''} · ${esc(desc)}</span></div>
 <div class="mz">${ms.map(m=>{const s=m.scrutin;const loi=s?LOIS.find(l=>[l.reference,...l.autres].some(x=>x.uid===s.uid)):null;
@@ -199,6 +277,7 @@ const catUrl=c=>c==="Toutes"?'/sujets':`/sujets/${slug(c)}`;const famUrl=f=>`/gr
 function titre(v,arg){
   if(v==="loi"&&BYID[arg])return `${BYID[arg].titre}, ${BYID[arg].annee} : qui a voté quoi`;
   if(v==="sujets")return catSel==="Toutes"?"Les votes par sujet":`${catSel} : qui a voté quoi`;
+  if(v==="effets")return EFSLUG[arg]?`${EFDEF[EFSLUG[arg]][1]} : qui a voté quoi`:"Ce que font les lois";
   if(v==="groupes")return arg?`Comment ${COURT[famSel]} a voté sur le travail`:"Les votes par groupe politique";
   if(v==="comparer")return arg?`${COURT[cmpA]} et ${COURT[cmpB]} : leurs votes comparés`:"Comparer deux groupes";
   return {methode:"Méthode",mentions:"Mentions légales"}[v]||"";
@@ -207,9 +286,11 @@ function titre(v,arg){
 function render(){
   const p=location.pathname.split('/').filter(Boolean);const v=p[0]||"mesures",arg=p[1];
   if(v==="sujets")catSel=CATSLUG[arg]||"Toutes";
+  if(v==="effets")effSel=arg||null;
+  cmpDuel=(v==="comparer"&&!!arg);
   if(v==="groupes"&&FAMSLUG[arg])famSel=FAMSLUG[arg];
   if(v==="comparer"){if(FAMSLUG[arg])cmpA=FAMSLUG[arg];if(FAMSLUG[p[2]])cmpB=FAMSLUG[p[2]];}
-  const map={sujets:vueSujets,mesures:vueMesures,groupes:vueGroupes,comparer:vueComparer,methode:vueMethode,mentions:vueMentions};
+  const map={sujets:vueSujets,effets:vueEffets,mesures:vueMesures,groupes:vueGroupes,comparer:vueComparer,methode:vueMethode,mentions:vueMentions};
   $('#view').innerHTML=`<div class="view">${v==="loi"?vueLoi(arg):map[v]?map[v]():`<p>Cette page n'existe pas. <a href="/">Revenir à l'accueil</a></p>`}</div>`;
   const cur=v==="mesures"?"/":"/"+(v==="loi"?"sujets":v);
   document.querySelectorAll('nav.tabs a').forEach(a=>a.setAttribute('aria-current',a.getAttribute('href')===cur?'page':'false'));

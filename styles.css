@@ -166,3 +166,62 @@ table.mx thead th.law .res{display:block;font-family:"IBM Plex Mono",monospace;f
 .pourvous{border-left:4px solid var(--mint);background:var(--chip);border-radius:0 10px 10px 0;padding:11px 14px;margin:0 0 14px}
 .pourvous .k{font-family:"Squada One",sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:14px;color:var(--ink2)}
 .pourvous p{margin:2px 0 0;font-size:15.5px;max-width:60ch}
+
+/* étiquettes d'effet */
+.efintro{max-width:72ch;color:var(--ink2);font-size:14.5px;margin:0 0 18px}
+.efdef{margin:-6px 0 14px;color:var(--muted);font-size:13.5px;max-width:70ch}
+.ebadges{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 12px}
+.ebadge{display:inline-flex;align-items:center;gap:7px;text-decoration:none;font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 12px 4px 5px;border:1.5px solid var(--line);background:var(--chip);color:var(--ink)}
+.ebadge i{display:grid;place-items:center;width:19px;height:19px;border-radius:50%;background:var(--ink);color:var(--bg);font-style:normal;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600}
+.ebadge.big{font-family:"Squada One",sans-serif;font-weight:400;font-size:27px;letter-spacing:.01em;padding:2px 16px 2px 6px;gap:10px}
+.ebadge.big i{width:30px;height:30px;font-size:15px}
+.ewhy{margin:0 0 12px;padding-left:18px;font-size:14px;color:var(--ink2);max-width:68ch}
+.ewhy li{margin-bottom:5px}
+.ewhy b{color:var(--ink)}
+.eff-row{display:grid;grid-template-columns:minmax(118px,160px) minmax(0,1fr) minmax(136px,auto) 78px;gap:10px 14px;align-items:center;padding:9px 0;border-top:1px solid var(--line2)}
+.eff-row .nm{font-weight:600;font-size:13.5px;line-height:1.2}
+.eff-row .nm small{display:block;font-weight:400;color:var(--muted);font-size:11.5px}
+.eff-row .lg{font-size:12.5px;color:var(--ink2);font-family:"IBM Plex Mono",monospace;white-space:nowrap}
+.eff-row .pct{font-family:"Squada One",sans-serif;font-size:27px;line-height:1;text-align:right}
+.eff-row .stack{height:28px}
+.eff-row.head{border-top:0;padding-bottom:4px;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700}
+.eff-row.head .nm,.eff-row.head .lg,.eff-row.head .pct{font-family:inherit;font-size:11.5px;font-weight:700;color:var(--muted)}
+.efdet{margin-top:12px;border-top:1px solid var(--line2);padding-top:10px}
+.efdet summary{cursor:pointer;font-size:13.5px;font-weight:600}
+.efrow{grid-template-columns:minmax(0,1fr) auto}
+section.eff{margin-bottom:20px}
+
+/* matrice d'accord */
+table.acc{border-collapse:separate;border-spacing:3px;font-family:"IBM Plex Mono",monospace;font-size:13px}
+table.acc th{font-family:Lato,sans-serif;font-size:12px;font-weight:700;color:var(--ink2);text-align:right;padding:0 6px;white-space:nowrap}
+table.acc thead th{vertical-align:bottom;height:124px;text-align:left;padding:0}
+table.acc thead th span{display:block;transform:translateX(24px) rotate(-55deg);transform-origin:left bottom;width:18px;white-space:nowrap}
+table.acc td{width:46px;height:40px;text-align:center;border-radius:6px;background:color-mix(in srgb,var(--ink) var(--w),var(--surface));color:var(--ink);font-weight:500}
+table.acc td.ac{cursor:pointer;padding:0}
+table.acc td.ac a{display:grid;place-items:center;width:100%;height:40px;color:inherit;text-decoration:none;border-radius:6px}
+table.acc td.ac a:hover{outline:2px solid var(--mint);outline-offset:1px}
+table.acc td.inv{color:var(--bg)}
+table.acc td.self{background:transparent;color:var(--muted)}
+.acleg{display:flex;align-items:center;gap:6px;margin-top:12px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.acleg i{display:block;width:34px;height:18px;border-radius:4px;background:color-mix(in srgb,var(--ink) var(--w),var(--surface))}
+.duel{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:18px}
+.duelnum{font-family:"Squada One",sans-serif;font-size:66px;line-height:.9}
+.duel>div:last-child{flex:1;min-width:260px}
+.mlist{margin:0 0 12px;padding-left:18px;font-size:14.5px;color:var(--ink2);max-width:70ch}
+.mlist li{margin-bottom:6px}
+.mlist b{color:var(--ink)}
+@media (max-width:620px){
+ .eff-row{grid-template-columns:1fr auto;gap:4px 10px}
+ .eff-row .lg{white-space:normal;grid-column:1}
+ .eff-row .pct{grid-row:1;grid-column:2}
+ .eff-row>div:nth-child(2){grid-column:1/-1}
+ .eff-row.head{display:none}
+ .duelnum{font-size:48px}
+}
+
+.efnote{max-width:72ch;margin:10px 0 0}
+.ebadge.mini{padding:0;border:0;background:transparent;margin-left:7px;vertical-align:middle}
+.ebadge.mini i{width:17px;height:17px;font-size:10px}
+.acleg i{box-shadow:inset 0 0 0 1px var(--line)}
+
+a.ebadge:hover{border-color:var(--ink)}

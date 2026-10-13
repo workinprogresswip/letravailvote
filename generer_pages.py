@@ -13,8 +13,8 @@ from pathlib import Path
 
 RACINE = Path(__file__).resolve().parent
 SITE = "https://www.letravailvote.fr"
-DOSSIERS = ["loi", "sujets", "groupes", "comparer"]
-FICHIERS = ["sujets.html", "groupes.html", "comparer.html", "methode.html", "mentions.html"]
+DOSSIERS = ["loi", "sujets", "groupes", "comparer", "effets"]
+FICHIERS = ["sujets.html", "effets.html", "groupes.html", "comparer.html", "methode.html", "mentions.html"]
 
 
 def lire_objet(texte, nom):
@@ -26,6 +26,7 @@ def lire_objet(texte, nom):
 def slug(s):
     s = unicodedata.normalize("NFD", s)
     s = "".join(c for c in s if unicodedata.category(c) != "Mn").lower()
+    s = s.replace("\u0153", "oe").replace("\u00e6", "ae")
     return re.sub(r"[^a-z0-9]+", "-", s).strip("-")
 
 
@@ -43,6 +44,9 @@ CATDESC = lire_objet(app_js, "CATDESC")
 textes_js = (RACINE / "textes.js").read_text(encoding="utf-8")
 BREF = dict(re.findall(r'^"([^"]+)":\{bref:"((?:[^"\\]|\\.)*)"', textes_js, re.M))
 POURVOUS = lire_objet(textes_js, "POURVOUS")
+EFFETS = json.loads(re.sub(r"([{,])(\w+):", r'\1"\2":',
+                           re.search(r"const EFFETS=(\{.*?\});", textes_js, re.S).group(1)))
+EFFETS_DEF = json.loads(re.search(r"const EFFETS_DEF=(\[.*?\]);", textes_js, re.S).group(1))
 
 FAMS = [f["id"] for f in DATA["familles"] if f["id"] != "Non inscrits"]
 LOIS = sorted(DATA["lois"], key=lambda l: l["reference"]["date"])
@@ -74,6 +78,12 @@ for c in DATA["categories"]:
     n = sum(l["categorie"] == c for l in LOIS)
     pages.append((f"/sujets/{slug(c)}", f"{c} : qui a voté quoi",
                   court(f"{n} texte{'s' if n > 1 else ''} depuis 2016 et le vote de chaque groupe. {CATDESC.get(c, '')}")))
+pages.append(("/effets", "Ce que font les lois",
+              f"Qui soutient quoi, par grandes masses : nouveaux droits, droits réduits, marge de manœuvre pour l'entreprise. {len(VOTEES)} lois travail depuis 2016, étiquetées une à une."))
+for cle, lab, _gl, defi in EFFETS_DEF:
+    ids = [l for l in LOIS if cle in EFFETS.get(l["id"], {})]
+    pages.append((f"/effets/{slug(lab)}", f"{lab} : qui a voté quoi",
+                  court(f"{len(ids)} texte{'s' if len(ids) > 1 else ''} depuis 2016 et le vote de chaque groupe. {defi}")))
 pages.append(("/groupes", "Les votes par groupe politique",
               "Pour chaque groupe de l'Assemblée nationale, toutes ses positions sur les lois travail, retraites et chômage depuis 2016."))
 for f in FAMS:

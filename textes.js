@@ -51,3 +51,44 @@ const POURVOUS={
 "don-sang-2025":"Rien pour l'instant. Le texte n'est pas devenu une loi.",
 "logement-publics-2026":"Si vous êtes agent de l'État, davantage de logements sociaux vous sont réservés sur les terrains cédés par l'État."
 };
+
+// ---------- étiquettes d'effet (voir page Méthode)
+const EFFETS_DEF=[
+["droit","Nouveau droit","d","Crée un droit pour les travailleurs, ou élargit un droit existant."],
+["moins","Droit réduit ou conditionné","m","Diminue un droit existant, ou le soumet à une condition nouvelle."],
+["marge","Marge de manœuvre pour l'entreprise","e","Déplace la règle vers l'accord d'entreprise, ou assouplit, plafonne ou supprime une contrainte qui pesait sur l'employeur."],
+["oblig","Nouvelle obligation pour l'employeur","o","Impose une démarche, une négociation ou une publication, distincte du droit créé."],
+["temp","Temporaire ou expérimental","t","Borné dans le temps, ou limité à des territoires ou à des entreprises désignés."]
+];
+const EFFETS={
+"loi-travail-2016":{marge:"Le temps de travail peut être fixé par accord d'entreprise avant l'accord de branche, et la loi inscrit des indicateurs de difficultés économiques pour le licenciement économique.",droit:"Création du compte personnel d'activité."},
+"ordonnances-habilitation-2017":{marge:"L'autorisation portait notamment sur le plafonnement des indemnités prud'homales, la fusion des instances représentatives et l'élargissement de ce qui se négocie dans l'entreprise."},
+"aidants-2017":{droit:"Un salarié peut recevoir des jours de repos cédés par ses collègues, en gardant son salaire."},
+"ordonnances-ratification-2017":{marge:"Donne force de loi aux ordonnances de 2017, et retouche le délai pour contester un accord d'entreprise ainsi que les règles d'élection du comité social et économique."},
+"avenir-pro-2018":{droit:"L'assurance chômage s'ouvre aux démissionnaires et aux indépendants, sous conditions strictes.",oblig:"Les entreprises d'au moins 50 salariés publient chaque année un index de l'égalité entre les femmes et les hommes."},
+"pacte-2018":{marge:"Regroupe les seuils d'effectif autour de 11, 50 et 250 salariés, et permet de mettre en place l'intéressement par accord type de branche."},
+"proches-aidants-2018":{oblig:"La conciliation entre le rôle d'aidant et la vie professionnelle devient un thème de négociation obligatoire pour les branches."},
+"deuil-2020":{droit:"Crée un congé de deuil de 8 jours et allonge le congé pour décès d'un enfant."},
+"tzcld-2020":{droit:"Dans les territoires habilités, une entreprise à but d'emploi peut embaucher en CDI une personne privée d'emploi depuis au moins un an.",temp:"Expérimentation prolongée de cinq ans, limitée aux territoires habilités."},
+"assmat-2021":{droit:"La collecte des cotisations de santé, de prévoyance et de retraite complémentaire est généralisée pour les assistants maternels et les salariés des particuliers employeurs."},
+"sante-travail-2021":{droit:"Crée une visite médicale de mi-carrière.",oblig:"Renforce la prévention des risques professionnels et le suivi des formations santé et sécurité dans le passeport de prévention."},
+"plateformes-2022":{droit:"Les chauffeurs VTC et les livreurs à deux ou trois roues élisent des représentants qui négocient avec les plateformes."},
+"pouvoir-achat-2022":{marge:"L'intéressement peut être mis en place par décision unilatérale dans les entreprises de moins de 50 salariés sans délégué syndical ni CSE, et la prime de partage de la valeur reste au choix de l'employeur."},
+"marche-travail-2022":{moins:"Un abandon de poste vaut présomption de démission, et refuser deux propositions de CDI en douze mois après un CDD ou une mission d'intérim peut priver d'allocation chômage.",marge:"L'employeur peut considérer comme démissionnaire le salarié qui ne revient pas après une mise en demeure."},
+"retraites-2023":{moins:"L'âge légal de départ passe progressivement de 62 à 64 ans, et le passage à 43 années de cotisation est accéléré."},
+"erasmus-apprentis-2023":{droit:"Un apprenti peut effectuer jusqu'à un an de son contrat à l'étranger, la condition de durée minimale d'exécution en France étant supprimée."},
+"plein-emploi-2023":{moins:"Les allocataires du RSA sont inscrits d'office à France Travail et signent un contrat d'engagement fixant au moins 15 heures d'activité par semaine."},
+"partage-valeur-2023":{droit:"Les salariés des entreprises de 11 à 49 salariés durablement rentables entrent dans un dispositif de partage de la valeur.",oblig:"L'obligation de partage est étendue à ces entreprises, et celles de 50 salariés et plus doivent renégocier en cas de hausse exceptionnelle du bénéfice.",temp:"Cette obligation nouvelle est expérimentale, pour cinq ans."},
+"titres-resto-2023":{droit:"Les titres-restaurant peuvent payer tout produit alimentaire, y compris non directement consommable.",temp:"Dérogation prolongée jusqu'au 31 décembre 2026."},
+"pma-travail-2025":{droit:"Protection contre les discriminations et absences rémunérées pour les actes médicaux d'une PMA ou les entretiens d'agrément en adoption."},
+"don-sang-2025":{droit:"Créerait une autorisation d'absence rémunérée pour donner son sang, jusqu'à huit fois par an."},
+"seniors-2025":{droit:"Facilite la retraite progressive et supprime la limite de trois mandats successifs au comité social et économique.",marge:"Dans le contrat de valorisation de l'expérience, l'employeur peut mettre le salarié à la retraite dès l'âge légal et le taux plein atteints.",oblig:"Les branches et les entreprises de 300 salariés et plus doivent négocier tous les quatre ans sur l'emploi des salariés expérimentés.",temp:"Le contrat de valorisation de l'expérience est expérimental, pour cinq ans."},
+"suspension-retraites-2025":{droit:"Les personnes nées entre 1964 et 1968 gagnent un trimestre sur leur âge de départ.",temp:"La suspension court jusqu'au 1er janvier 2028."},
+"tzcld-2026":{droit:"Pérenniserait l'expérimentation et l'étendrait progressivement à de nouveaux territoires."},
+"chomage-2026":{moins:"La durée maximale d'indemnisation après une rupture conventionnelle passe de 18 à 15 mois pour les moins de 55 ans en métropole."},
+"logement-publics-2026":{droit:"Les droits de réservation de l'État sur les terrains cédés avec décote passent de 10 % à 50 %, au bénéfice des agents publics."}
+};
+const SANS_EFFET={
+"retraite-universelle-2020":"Projet abandonné en mars 2020. Aucune règle n'en est issue, il n'y a donc pas d'effet à décrire.",
+"abrogation-retraites-2024":"Le retour à 62 ans a été supprimé en commission. Le texte débattu ne contenait plus que des demandes de rapports, et il a été rejeté."
+};
